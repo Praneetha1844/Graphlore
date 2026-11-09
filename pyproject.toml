@@ -11,6 +11,11 @@ requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "Praneetha Potharaju" }]
 dependencies = ["networkx>=3.2", "pydantic>=2.6", "pyyaml>=6"]
+keywords = ["knowledge-graph", "provenance", "question-answering", "ontology"]
+
+[project.urls]
+Source = "https://github.com/Praneetha1844/Graphlore"
+Documentation = "https://github.com/Praneetha1844/Graphlore/tree/main/docs"
 
 [project.optional-dependencies]
 spacy = ["spacy>=3.7"]

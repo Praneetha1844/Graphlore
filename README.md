@@ -45,7 +45,9 @@ flowchart LR
 ```
 
 Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), the formal model in
-[docs/KNOWLEDGE_MODEL.md](docs/KNOWLEDGE_MODEL.md), and decisions in [docs/adr](docs/adr).
+[docs/KNOWLEDGE_MODEL.md](docs/KNOWLEDGE_MODEL.md), and decisions in [docs/adr](docs/adr). The
+documentation index is [docs/index.md](docs/index.md) (CLI and configuration reference, threat
+model, glossary, development guide, roadmap).
 
 ## Quick start
 
@@ -129,8 +131,9 @@ docs/            architecture, formal model, decision records
 - **Low-recall default extractor.** Only active-voice statements inside one sentence, between
   adjacent known entities, with a listed trigger phrase. Passive voice, coreference ("she", "the
   company") and unlisted entities are missed.
-- **Exact entity linking.** Questions must use a name stored in the graph; paraphrases and typos are
-  not matched, and short aliases appear only if the resolver recorded them.
+- **Exact entity linking.** Questions must use a name or alias stored in the graph; paraphrases and
+  typos are not matched. Gazetteer aliases are stored when you build with the rule extractor
+  through the CLI; other extractors only store aliases that the resolver merged.
 - **Sentence splitting is heuristic.** Abbreviations such as "Dr. Okafor" can be split wrongly.
 - **Graph answers only.** Open-ended questions and anything outside the extracted facts get no answer.
 - **Facts are not versioned or reconciled.** Conflicting sources both produce edges, and there is no
@@ -157,6 +160,11 @@ docs/            architecture, formal model, decision records
 make install
 make check     # ruff, mypy, pytest
 ```
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for how to report a vulnerability, and
+[docs/THREAT_MODEL.md](docs/THREAT_MODEL.md) for what the design does and does not defend against.
 
 ## License
 

@@ -48,7 +48,7 @@ flowchart LR
 | `extract` | `Gazetteer`, `RuleExtractor`, `SpacyExtractor`, `LLMExtractor` behind one `Extractor` protocol |
 | `resolver` | Normalise names, merge close variants, list near-misses for review |
 | `graph` | `GraphStore` protocol and `NetworkXStore`; enforces typing and provenance on every write |
-| `neo4j_store` | Optional store with the same rules; relation names are allow-listed before use in Cypher |
+| `neo4j_store` | Optional store with the same rules; relation names are allow-listed before use in Cypher, and uniqueness constraints (Neo4j 5 syntax) are created on connect |
 | `build` | Orchestrates chunking, extraction, validation, resolution and storage |
 | `qa` | Entity linking, bounded path search, cited answers, optional phrasing |
 | `evaluate` | Exact match and gold-edge recall on a question file |
