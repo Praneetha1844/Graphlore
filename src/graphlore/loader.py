@@ -36,11 +36,17 @@ def load_documents(path: Path | str) -> list[Document]:
         base = root
     if not files:
         raise ValueError(f"no .txt, .md or .pdf documents found under {root}")
-    documents = []
+    documents: list[Document] = []
+    seen: set[str] = set()
     for file in files:
         text = _read(file).strip()
-        if text:
-            documents.append(Document(file.relative_to(base).with_suffix("").as_posix(), text))
+        if not text:
+            continue
+        doc_id = file.relative_to(base).with_suffix("").as_posix()
+        if doc_id in seen:
+            raise ValueError(f"two documents would share the id {doc_id!r}; rename one of them")
+        seen.add(doc_id)
+        documents.append(Document(doc_id, text))
     if not documents:
         raise ValueError(f"all documents under {root} are empty")
     return documents

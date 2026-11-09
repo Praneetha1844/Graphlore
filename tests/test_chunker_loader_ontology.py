@@ -74,6 +74,13 @@ def test_loader_errors(tmp_path) -> None:
         load_documents(tmp_path)
 
 
+def test_loader_rejects_documents_that_would_share_an_id(tmp_path) -> None:
+    (tmp_path / "notes.md").write_text("Alpha.", encoding="utf-8")
+    (tmp_path / "notes.txt").write_text("Beta.", encoding="utf-8")
+    with pytest.raises(ValueError, match="share the id"):
+        load_documents(tmp_path)
+
+
 # ---- ontology
 
 
