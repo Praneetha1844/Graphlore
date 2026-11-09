@@ -1,6 +1,7 @@
 """Optional Neo4j implementation of ``GraphStore``.
 
-Not exercised by the automated test suite, which has no database. It follows the same rules as
+Not exercised by the automated test suite, which has no database. The constraint syntax in
+``ensure_schema`` targets Neo4j 5 and later. It follows the same rules as
 ``NetworkXStore``: ontology-checked edges that cite an existing chunk. Relation names cannot be
 Cypher parameters, so predicates are checked against the ontology *and* a strict pattern before
 being placed in a query string. All other values are bound parameters.
@@ -27,6 +28,15 @@ class Neo4jStore:
             raise RuntimeError("install the 'neo4j' extra to use the Neo4j store") from exc
         self.ontology = ontology
         self._driver = GraphDatabase.driver(uri, auth=(user, password))
+        self.ensure_schema()
+
+    def ensure_schema(self) -> None:
+        """Uniqueness constraints (Neo4j 5 syntax) keep ids unique and make MERGE lookups fast."""
+        for label in ("Entity", "Chunk"):
+            self._run(
+                f"CREATE CONSTRAINT {label.lower()}_id IF NOT EXISTS "
+                f"FOR (n:{label}) REQUIRE n.id IS UNIQUE"
+            )
 
     def close(self) -> None:
         self._driver.close()
