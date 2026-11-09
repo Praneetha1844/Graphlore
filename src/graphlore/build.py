@@ -40,9 +40,13 @@ def build_graph(
     ontology: Ontology,
     max_chars: int = 500,
     overlap: int = 1,
+    known_aliases: dict[tuple[str, str], set[str]] | None = None,
 ) -> BuildStats:
     """Every stored edge cites the chunk its triple came from. Triples the ontology rejects,
-    and self-loops created by entity resolution, are counted in ``rejected`` and dropped."""
+    and self-loops created by entity resolution, are counted in ``rejected`` and dropped.
+
+    ``known_aliases`` maps ``(canonical name, type)`` to extra surface forms, for example from
+    a gazetteer. They are stored on the entity so questions can use them."""
     docs = list(documents)
     chunks = [c for d in docs for c in chunk_document(d, max_chars, overlap)]
     for chunk in chunks:
@@ -62,6 +66,8 @@ def build_graph(
         + [(t.object, t.object_type) for t in accepted]
     )
     aliases: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for key, surfaces in (known_aliases or {}).items():
+        aliases[key] |= surfaces
     for (entity_type, raw), canonical in resolution.canonical.items():
         if raw != canonical:
             aliases[(canonical, entity_type)].add(raw)

@@ -9,6 +9,8 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+import yaml
+
 from graphlore.build import build_graph
 from graphlore.evaluate import evaluate, load_qa
 from graphlore.export import load_json, write_graphml, write_json
@@ -25,8 +27,9 @@ from graphlore.loader import load_documents
 from graphlore.ontology import Ontology, load_ontology
 from graphlore.qa import answer_question, phrase_answer
 
-DEFAULT_ONTOLOGY = "ontology/default.yaml"
-DEFAULT_GAZETTEER = "ontology/gazetteer.yaml"
+# The container image sets these so the bundled sample files are found from any directory.
+DEFAULT_ONTOLOGY = os.environ.get("GRAPHLORE_ONTOLOGY", "ontology/default.yaml")
+DEFAULT_GAZETTEER = os.environ.get("GRAPHLORE_GAZETTEER", "ontology/gazetteer.yaml")
 
 
 def build_provider(name: str, model: str, allow_remote: bool) -> LLMProvider:
@@ -99,9 +102,11 @@ def run(args: argparse.Namespace) -> int:
 
     if args.command == "build":
         store = NetworkXStore(ontology)
+        extractor = _extractor(args, ontology)
+        known = extractor.gazetteer.aliases() if isinstance(extractor, RuleExtractor) else None
         stats = build_graph(
-            load_documents(args.input), _extractor(args, ontology), store, ontology,
-            args.max_chars, args.overlap,
+            load_documents(args.input), extractor, store, ontology,
+            args.max_chars, args.overlap, known,
         )
         write_json(store, args.output)
         print(
@@ -152,7 +157,10 @@ def run(args: argparse.Namespace) -> int:
 def main(argv: Sequence[str] | None = None) -> int:
     try:
         return run(_parser().parse_args(argv))
-    except (OSError, ValueError, RuntimeError, KeyError, OntologyViolation, ProvenanceError) as exc:
+    except (
+        OSError, ValueError, RuntimeError, KeyError, yaml.YAMLError, OntologyViolation,
+        ProvenanceError,
+    ) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
 

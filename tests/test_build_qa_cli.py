@@ -159,3 +159,28 @@ def test_cli_errors_exit_with_code_one(tmp_path, capsys) -> None:
               "--provider", "openai", "--model", "m"]
     assert main([*ontology, *remote]) == 1
     assert "--allow-remote" in capsys.readouterr().err
+
+
+def test_gazetteer_aliases_are_stored_so_questions_can_use_them(ontology) -> None:
+    from graphlore.build import build_graph
+    from graphlore.extract import RuleExtractor, load_gazetteer
+    from graphlore.graph import NetworkXStore
+    from graphlore.loader import load_documents
+
+    gazetteer = load_gazetteer(GAZETTEER_PATH, ontology)
+    store = NetworkXStore(ontology)
+    build_graph(
+        load_documents(CORPUS_PATH), RuleExtractor(ontology, gazetteer), store, ontology,
+        known_aliases=gazetteer.aliases(),
+    )
+    assert [e.name for e in link_entities(store, "Where does Mira work?")] == ["Mira Okafor"]
+    answer = answer_question(store, ontology, "Where does Mira work?")
+    assert answer.answer_entities == ["Helio Systems"]
+
+
+def test_openai_provider_refuses_to_send_a_key_over_plain_http() -> None:
+    from graphlore.llm import OpenAICompatProvider
+
+    with pytest.raises(LLMError):
+        OpenAICompatProvider("m", "http://api.example.com/v1", "key")
+    OpenAICompatProvider("m", "https://api.example.com/v1", "key")
