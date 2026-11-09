@@ -1,0 +1,59 @@
+# Hand-written sample ontology. Relation order matters: when several triggers match the text
+# between two mentions, the first relation listed (whose types fit) wins.
+entity_types: [Person, Organization, Location, Technology]
+
+relations:
+  WORKS_AT:
+    domain: [Person]
+    range: [Organization]
+    triggers: [works at, works for, joined, is employed by]
+    cues: [work, works, employer, employed]
+    inverse: EMPLOYS
+  EMPLOYS:
+    domain: [Organization]
+    range: [Person]
+    cues: [employs, employees]
+    inverse: WORKS_AT
+  FOUNDED:
+    domain: [Person]
+    range: [Organization]
+    triggers: [founded, co-founded]
+    cues: [founded, founder]
+    inverse: FOUNDED_BY
+  FOUNDED_BY:
+    domain: [Organization]
+    range: [Person]
+    cues: [who founded, founder, founded by]
+    inverse: FOUNDED
+  HEADQUARTERED_IN:
+    domain: [Organization]
+    range: [Location]
+    triggers: [is headquartered in, headquartered in, is based in]
+    cues: [headquartered, based, headquarters]
+  LOCATED_IN:
+    domain: [Location]
+    range: [Location]
+    triggers: [is located in, lies in]
+    cues: [located]
+  ACQUIRED:
+    domain: [Organization]
+    range: [Organization]
+    triggers: [acquired, bought]
+    cues: [acquired, acquire, bought]
+    inverse: ACQUIRED_BY
+  ACQUIRED_BY:
+    domain: [Organization]
+    range: [Organization]
+    cues: [acquired, acquirer]
+    inverse: ACQUIRED
+  COLLABORATES_WITH:
+    domain: [Organization]
+    range: [Organization]
+    triggers: [collaborates with, partners with]
+    cues: [collaborates, partners, partner]
+    symmetric: true
+  USES:
+    domain: [Organization]
+    range: [Technology]
+    triggers: [uses, builds on]
+    cues: [uses, use, technology, stack]

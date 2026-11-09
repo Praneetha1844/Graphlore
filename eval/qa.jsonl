@@ -1,0 +1,5 @@
+{"question": "Where does Mira Okafor work?", "answers": ["Helio Systems"], "gold_edges": [["Mira Okafor", "WORKS_AT", "Helio Systems"]]}
+{"question": "Who founded Northwind Labs?", "answers": ["Tomas Reyes"], "gold_edges": [["Northwind Labs", "FOUNDED_BY", "Tomas Reyes"]]}
+{"question": "Where is Helio Systems headquartered?", "answers": ["Lisbon"], "gold_edges": [["Helio Systems", "HEADQUARTERED_IN", "Lisbon"]]}
+{"question": "Which company acquired Helio Systems?", "answers": ["Northwind Labs"], "gold_edges": [["Helio Systems", "ACQUIRED_BY", "Northwind Labs"]]}
+{"question": "How is Mira Okafor connected to Portugal?", "gold_edges": [["Mira Okafor", "WORKS_AT", "Helio Systems"], ["Helio Systems", "HEADQUARTERED_IN", "Lisbon"], ["Lisbon", "LOCATED_IN", "Portugal"]]}

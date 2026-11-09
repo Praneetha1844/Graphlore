@@ -1,0 +1,15 @@
+# Hand-written sample gazetteer for the fictional corpus in examples/corpus.
+# All people, companies and places below are invented.
+entities:
+  - { name: Mira Okafor, type: Person, aliases: [Mira] }
+  - { name: Tomas Reyes, type: Person, aliases: [Tomas] }
+  - { name: Helio Systems, type: Organization, aliases: [Helio] }
+  - { name: Northwind Labs, type: Organization, aliases: [Northwind] }
+  - { name: Brightpath Analytics, type: Organization, aliases: [Brightpath] }
+  - { name: Lisbon, type: Location }
+  - { name: Porto, type: Location }
+  - { name: Zurich, type: Location }
+  - { name: Portugal, type: Location }
+  - { name: Switzerland, type: Location }
+  - { name: Rust, type: Technology }
+  - { name: PostgreSQL, type: Technology }
